@@ -1,9 +1,6 @@
 #ifndef OPENGL_BASIC_DEMO_WINDOW_H
 #define OPENGL_BASIC_DEMO_WINDOW_H
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
 namespace opengl_basic_demo
 {
 
@@ -31,13 +28,7 @@ class ApplicationWindow
 
     // process all input: query GLFW whether relevant keys are pressed/released this frame and react
     // accordingly
-    void processInput(GLFWwindow *window)
-    {
-        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        {
-            glfwSetWindowShouldClose(window, true);
-        }
-    }
+    void processInput(GLFWwindow* window);
 };
 
 } // opengl_basic_demo

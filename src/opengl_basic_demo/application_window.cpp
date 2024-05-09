@@ -1,3 +1,5 @@
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include <iostream>
 
 #include "application_window.h"
@@ -67,6 +69,14 @@ void ApplicationWindow::initialiseGlfw()
     glfwMakeContextCurrent(m_window);
     glfwSetFramebufferSizeCallback(m_window, framebufferSizeCallback);
     
+}
+
+void ApplicationWindow::processInput(GLFWwindow* window)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(window, true);
+    }
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback
