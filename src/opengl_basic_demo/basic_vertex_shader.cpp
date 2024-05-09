@@ -1,6 +1,9 @@
 #include <glad/glad.h>
 
 #include <cstddef>
+#include <string>
+
+#include "exceptions.h"
 
 
 namespace opengl_basic_demo {
@@ -11,8 +14,46 @@ float vertices[] {
     0.0f,  0.5f, 0.0f
 };
 
-class BasicVertexShader
-{
+class BasicVertexShader {
+public:
+    // creates a vertex buffer object which can be used to pass in the vertices
+    // that will get drawn. The buffer is bound to target GL_ARRAY_BUFFER which
+    // is used for vertex attribute data
+    void createArrayBuffer() {
+        size_t numberOfBuffers {1};
+        glGenBuffers(numberOfBuffers, &m_vertexBufferObjectId);  
+        glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferObjectId);
+    }
+
+    // write data to buffer and specify draw type. GL_STATIC_DRAW is used to 
+    // re-use the same vertex data many times without needing to resend or update
+    void writeToBuffer(float vertices[]) {
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    }
+
+    void createVertexShader() {
+        m_vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+
+        // compile shader source code
+        size_t numberOfShaders {1};
+        glShaderSource(m_vertexShaderId, numberOfShaders, &m_vertexShaderSource, nullptr);
+
+        // check for success of compilation
+        int success;
+        glGetShaderiv(m_vertexShaderId, GL_COMPILE_STATUS, &success);
+
+        if (!success) {   
+            // retrieve log
+            size_t logBufferSize {512};
+            char infoLog[logBufferSize];
+            glGetShaderInfoLog(m_vertexShaderId, logBufferSize, NULL, infoLog);
+            std::string errMsg = std::string(infoLog);
+            throw VertexShaderException(errMsg);
+        }
+    }
+
+private:
+    // members
     unsigned int m_vertexBufferObjectId;
     unsigned int m_vertexShaderId;
 
@@ -36,47 +77,6 @@ class BasicVertexShader
         "{\n"
         "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
         "}\n\0";
-    
-  public:
-    // creates a vertex buffer object which can be used to pass in the vertices
-    // that will get drawn. The buffer is bound to target GL_ARRAY_BUFFER which
-    // is used for vertex attribute data
-    void createArrayBuffer()
-    {
-        size_t numberOfBuffers {1};
-        glGenBuffers(numberOfBuffers, &m_vertexBufferObjectId);  
-        glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferObjectId);
-    }
-
-    // write data to buffer and specify draw type. GL_STATIC_DRAW is used to 
-    // re-use the same vertex data many times without needing to resend or update
-    void writeToBuffer(float vertices[])
-    {
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    }
-
-    void createVertexShader()
-    {
-        m_vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
-
-        // compile shader source code
-        size_t numberOfShaders {1};
-        glShaderSource(m_vertexShaderId, numberOfShaders, &m_vertexShaderSource, nullptr);
-
-        // check for success of compilation
-        int success;
-        glGetShaderiv(m_vertexShaderId, GL_COMPILE_STATUS, &success);
-
-        if (!success)
-        {   
-            // retrieve log
-            size_t logBufferSize {512};
-            char infoLog[logBufferSize];
-            glGetShaderInfoLog(m_vertexShaderId, logBufferSize, NULL, infoLog);
-
-            // TODO handle error
-        }
-    }
 };
 
 }  // opengl_basic_demo
