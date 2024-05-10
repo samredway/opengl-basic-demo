@@ -59,10 +59,10 @@ private:
 };
 
 
-class BasicFragmentShader : public Shader {
+class FragmentShader : public Shader {
 public:
-    BasicFragmentShader() = default;
-    ~BasicFragmentShader() { deleteGlObj(); }
+    FragmentShader() = default;
+    ~FragmentShader() { deleteGlObj(); }
 
     virtual void initialise() {
         // compile shader from source

@@ -38,7 +38,7 @@ int main() {
     vertexShader.writeToBuffer(vertices);
 
     // initialise fragment shader
-    opengl_basic_demo::BasicFragmentShader fragmentShader{};
+    opengl_basic_demo::FragmentShader fragmentShader{};
     fragmentShader.initialise();
 
     // teardown underlying c object
