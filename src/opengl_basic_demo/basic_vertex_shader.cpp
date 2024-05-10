@@ -9,7 +9,7 @@ void BasicVertexShader::initialise() {
     m_vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
 
     // compile shader source code
-    size_t numberOfShaders {1};
+    const size_t numberOfShaders{1};
     glShaderSource(m_vertexShaderId, numberOfShaders, &m_vertexShaderSource, nullptr);
 
     // check for success of compilation
@@ -18,7 +18,7 @@ void BasicVertexShader::initialise() {
 
     if (!success) {   
         // retrieve log
-        size_t logBufferSize {512};
+        const size_t logBufferSize{512};
         char infoLog[logBufferSize];
         glGetShaderInfoLog(m_vertexShaderId, logBufferSize, NULL, infoLog);
         std::string errMsg = std::string(infoLog);

@@ -1,5 +1,7 @@
-#include <glad/glad.h>
+#ifndef OPENGL_BASIC_DEMO_BASIC_VERTEX_SHADER_H
+#define OPENGL_BASIC_DEMO_BASIC_VERTEX_SHADER_H
 
+#include <glad/glad.h>
 #include <string>
 
 #include "exceptions.h"
@@ -11,8 +13,18 @@ class BasicVertexShader {
 public:
     BasicVertexShader() = default;
 
+    ~BasicVertexShader() { deleteShaderObj(); }
+
     // set up vertex buffer and compile the shader source code
     void initialise();
+
+    unsigned int getId() {
+        return m_vertexShaderId;
+    }
+
+    // delete the underlying gl shader c object - once it is passed into the gpu
+    // we only need to keep the shader id
+    void deleteShaderObj() { glDeleteShader(m_vertexShaderId); }
 
     // write data to buffer and specify draw type. GL_STATIC_DRAW is used to 
     // re-use the same vertex data many times without needing to resend or update
@@ -49,3 +61,5 @@ private:
 };
 
 }  // opengl_basic_demo
+
+# endif
