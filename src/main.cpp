@@ -4,6 +4,8 @@
 #include <iostream>
 
 #include "opengl_basic_demo/application_window.h"
+#include "opengl_basic_demo/basic_fragment_shader.h"
+#include "opengl_basic_demo/basic_vertex_shader.h"
 #include "opengl_basic_demo/exceptions.h"
 
 // settings
@@ -23,9 +25,17 @@ int main() {
 
     try {
         window.start();
-    }
-    catch (opengl_basic_demo::ApplicationWindowException ex) {
+    } catch (opengl_basic_demo::ApplicationWindowException ex) {
         std::cout << "Error opening window " << ex.what() << std::endl;
     }
-    
+
+    opengl_basic_demo::BasicVertexShader vertexShader{};
+
+    try {
+        vertexShader.initialise();
+    } catch (opengl_basic_demo::VertexShaderException ex) {
+        std::cout << "Error initialising vertex shader" << ex.what() << std::endl;
+    }
+
+    vertexShader.writeToBuffer(vertices);
 }

@@ -3,7 +3,9 @@
 
 namespace opengl_basic_demo {
 
-void BasicVertexShader::createVertexShader() {
+void BasicVertexShader::initialise() {
+    createArrayBuffer();
+
     m_vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
 
     // compile shader source code
