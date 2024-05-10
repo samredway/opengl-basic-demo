@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "application_window.h"
-#include "exceptions.h"
+#include "application_window.hpp"
+#include "exceptions.hpp"
 
 #ifdef __APPLE__
     bool is_apple {true};

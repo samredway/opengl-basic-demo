@@ -3,9 +3,9 @@
 
 #include <iostream>
 
-#include "opengl_basic_demo/application_window.h"
-#include "opengl_basic_demo/exceptions.h"
-#include "opengl_basic_demo/shaders.h"
+#include "opengl_basic_demo/application_window.hpp"
+#include "opengl_basic_demo/exceptions.hpp"
+#include "opengl_basic_demo/shaders.hpp"
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -40,6 +40,28 @@ int main() {
     // initialise fragment shader
     opengl_basic_demo::FragmentShader fragmentShader{};
     fragmentShader.initialise();
+
+
+    // create shader program to link the two shaders so output of vertex goes
+    // to input of fragment and run the shader program
+    unsigned int shaderProgram;
+    shaderProgram = glCreateProgram();
+
+    glAttachShader(shaderProgram, vertexShader.getId());
+    glAttachShader(shaderProgram, fragmentShader.getId());
+    glLinkProgram(shaderProgram);
+
+    int success;
+    const size_t logBufferSize{512};
+    char infoLog[logBufferSize];
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    if(!success) {
+        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+        // TODO handle error
+    }
+    glUseProgram(shaderProgram);
+
+
 
     // teardown underlying c object
     fragmentShader.deleteGlObj();

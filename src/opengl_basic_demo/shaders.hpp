@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include <string>
 
-#include "exceptions.h"
+#include "exceptions.hpp"
 
 namespace opengl_basic_demo {
 
