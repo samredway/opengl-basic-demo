@@ -29,7 +29,7 @@ int main() {
     }
 
     // initialise vertex shader and write points
-    opengl_basic_demo::BasicVertexShader vertexShader{};
+    opengl_basic_demo::VertexShader vertexShader{};
     try {
         vertexShader.initialise();
     } catch (opengl_basic_demo::VertexShaderException ex) {
@@ -41,9 +41,7 @@ int main() {
     opengl_basic_demo::BasicFragmentShader fragmentShader{};
     fragmentShader.initialise();
 
-    // TODO use shader
-
     // teardown underlying c object
-    fragmentShader.deleteShaderObj();
-    vertexShader.deleteShaderObj();
+    fragmentShader.deleteGlObj();
+    vertexShader.deleteGlObj();
 }
