@@ -1,4 +1,4 @@
-#include "basic_vertex_shader.h"
+#include "shaders.h"
 
 
 namespace opengl_basic_demo {

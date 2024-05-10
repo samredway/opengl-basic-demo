@@ -1,15 +1,28 @@
-#ifndef OPENGL_BASIC_DEMO_BASIC_VERTEX_SHADER_H
-#define OPENGL_BASIC_DEMO_BASIC_VERTEX_SHADER_H
+#ifndef OPENGL_BASIC_DEMO_BASIC_FRAGMENT_SHADER_H
+#define OPENGL_BASIC_DEMO_BASIC_FRAGMENT_SHADER_H
 
 #include <glad/glad.h>
 #include <string>
 
 #include "exceptions.h"
 
-
 namespace opengl_basic_demo {
 
-class BasicVertexShader {
+class Shader {
+public:
+    Shader() = default;
+    ~Shader() { deleteGlObj(); }
+
+    virtual void initialise() = 0;
+    unsigned int getId() { return m_shaderId; }
+    void deleteGlObj() { glDeleteShader(m_shaderId); }
+
+private:
+    unsigned int m_shaderId;
+};
+
+
+class BasicVertexShader : public Shader{
 public:
     BasicVertexShader() = default;
 
@@ -18,9 +31,7 @@ public:
     // set up vertex buffer and compile the shader source code
     void initialise();
 
-    unsigned int getId() {
-        return m_vertexShaderId;
-    }
+    unsigned int getId() { return m_vertexShaderId; }
 
     // delete the underlying gl shader c object - once it is passed into the gpu
     // we only need to keep the shader id
@@ -60,6 +71,41 @@ private:
     }
 };
 
+
+class BasicFragmentShader {
+public:
+    BasicFragmentShader() = default;
+
+    ~BasicFragmentShader() { deleteShaderObj(); }
+
+    void initialise() {
+        // compile shader from source
+        m_fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(m_fragmentShaderId, 1, &m_fragmentShaderSource, NULL);
+        glCompileShader(m_fragmentShaderId);
+    }
+
+    unsigned int getId() {
+        return m_fragmentShaderId;
+    }
+
+    // delete the underlying gl shader c object - once it is passed into the gpu
+    // we only need to keep the shader id
+    void deleteShaderObj() { glDeleteShader(m_fragmentShaderId); }
+
+
+private:
+    unsigned int m_fragmentShaderId;
+
+    // shader source gets compiled for use in GPU
+    const char* m_fragmentShaderSource = "#version 330 core\n"
+        "out vec4 FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+        "}\n\0";
+};
+
 }  // opengl_basic_demo
 
-# endif
+#endif

@@ -4,9 +4,8 @@
 #include <iostream>
 
 #include "opengl_basic_demo/application_window.h"
-#include "opengl_basic_demo/basic_fragment_shader.h"
-#include "opengl_basic_demo/basic_vertex_shader.h"
 #include "opengl_basic_demo/exceptions.h"
+#include "opengl_basic_demo/shaders.h"
 
 // settings
 const unsigned int SCR_WIDTH = 800;
