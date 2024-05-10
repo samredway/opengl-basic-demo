@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
+
+#include <string>
 
 #include "application_window.h"
 #include "exceptions.h"
@@ -18,8 +19,7 @@ void ApplicationWindow::start() {
 
     // glad: load all OpenGL function pointers
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        // TODO error handling
+        throw ApplicationWindowException(std::string("Unable to load glad function pointers"));
     }
 
     // do render loop
