@@ -15,7 +15,7 @@ void VertexShader::initialise() {
     m_shaderId = glCreateShader(GL_VERTEX_SHADER);
 
     // compile shader source code
-    const size_t numberOfShaders{1};
+    GLsizei numberOfShaders{1};
     glShaderSource(m_shaderId, numberOfShaders, &m_shaderSource, nullptr);
 
     // check for success of compilation
@@ -27,8 +27,7 @@ void VertexShader::initialise() {
         const size_t logBufferSize{512};
         char infoLog[logBufferSize];
         glGetShaderInfoLog(m_shaderId, logBufferSize, NULL, infoLog);
-        std::string errMsg = std::string(infoLog);
-        throw VertexShaderException(errMsg);
+        throw VertexShaderException(infoLog);
     }
 }
 
@@ -57,8 +56,7 @@ void ShaderProgram::initialise() {
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
     if(!success) {
         glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::string errMsg = std::string(infoLog);
-        throw ShaderProgramException(errMsg);
+        throw ShaderProgramException(infoLog);
     }
 }
 

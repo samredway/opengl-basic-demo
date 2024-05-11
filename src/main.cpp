@@ -45,6 +45,11 @@ int main() {
     // Link shaders in a shader program and run
     std::vector<opengl_basic_demo::Shader*> shaders{vertexShader, fragmentShader};
     opengl_basic_demo::ShaderProgram shaderProgram{shaders};
-    shaderProgram.initialise();
+    try {
+        shaderProgram.initialise();
+    } catch (opengl_basic_demo::ShaderProgramException ex) {
+        std::cout << "Error initialising shader program " << ex.what() << std::endl;
+    }
+    
     shaderProgram.run();
 }

@@ -13,7 +13,7 @@ namespace opengl_basic_demo {
 class Shader {
 public:
     Shader() = default;
-    ~Shader() { deleteGlObj(); }
+    virtual ~Shader() { deleteGlObj(); }
 
     // any initial setup and compile the shader source code
     virtual void initialise() = 0;
@@ -31,7 +31,6 @@ private:
 class VertexShader : public Shader{
 public:
     VertexShader() = default;
-    ~VertexShader() { deleteGlObj(); }
 
     // set up vertex buffer and compile the shader source code
     virtual void initialise();
@@ -64,12 +63,12 @@ private:
 class FragmentShader : public Shader {
 public:
     FragmentShader() = default;
-    ~FragmentShader() { deleteGlObj(); }
 
     virtual void initialise() {
         // compile shader from source
         m_shaderId = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(m_shaderId, 1, &m_shaderSource, NULL);
+        GLsizei numberOfShaders{1};
+        glShaderSource(m_shaderId, numberOfShaders, &m_shaderSource, NULL);
         glCompileShader(m_shaderId);
     }
 
