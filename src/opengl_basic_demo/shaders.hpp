@@ -3,10 +3,12 @@
 
 #include <glad/glad.h>
 #include <string>
+#include <vector>
 
 #include "exceptions.hpp"
 
 namespace opengl_basic_demo {
+
 
 class Shader {
 public:
@@ -79,6 +81,25 @@ private:
         "{\n"
         "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
         "}\n\0";
+};
+
+
+// Takes a vector which contains an ordered collection of shaders to be run
+// The output of the first being passed to the input of the next and so on.
+class ShaderProgram {
+public:
+    ShaderProgram(std::vector<Shader*> orderedShaders)
+        : m_orderedShaders(orderedShaders) {}
+    ~ShaderProgram() {}
+
+    void initialise();
+
+    // Method to run program
+    void run() { glUseProgram(m_shaderProgramId); }
+
+private:
+    unsigned int m_shaderProgramId;
+    std::vector<Shader*> m_orderedShaders;
 };
 
 }  // opengl_basic_demo

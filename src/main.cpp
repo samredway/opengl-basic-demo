@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <vector>
 
 #include "opengl_basic_demo/application_window.hpp"
 #include "opengl_basic_demo/exceptions.hpp"
@@ -29,41 +30,21 @@ int main() {
     }
 
     // initialise vertex shader and write points
-    opengl_basic_demo::VertexShader vertexShader{};
+    opengl_basic_demo::VertexShader* vertexShader = new opengl_basic_demo::VertexShader();
     try {
-        vertexShader.initialise();
+        vertexShader->initialise();
     } catch (opengl_basic_demo::VertexShaderException ex) {
         std::cout << "Error initialising vertex shader " << ex.what() << std::endl;
     }
-    vertexShader.writeToBuffer(vertices);
+    vertexShader->writeToBuffer(vertices);
 
     // initialise fragment shader
-    opengl_basic_demo::FragmentShader fragmentShader{};
-    fragmentShader.initialise();
+    opengl_basic_demo::FragmentShader* fragmentShader = new opengl_basic_demo::FragmentShader();
+    fragmentShader->initialise();
 
-
-    // create shader program to link the two shaders so output of vertex goes
-    // to input of fragment and run the shader program
-    unsigned int shaderProgram;
-    shaderProgram = glCreateProgram();
-
-    glAttachShader(shaderProgram, vertexShader.getId());
-    glAttachShader(shaderProgram, fragmentShader.getId());
-    glLinkProgram(shaderProgram);
-
-    int success;
-    const size_t logBufferSize{512};
-    char infoLog[logBufferSize];
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if(!success) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        // TODO handle error
-    }
-    glUseProgram(shaderProgram);
-
-
-
-    // teardown underlying c object
-    fragmentShader.deleteGlObj();
-    vertexShader.deleteGlObj();
+    // Link shaders in a shader program and run
+    std::vector<opengl_basic_demo::Shader*> shaders{vertexShader, fragmentShader};
+    opengl_basic_demo::ShaderProgram shaderProgram{shaders};
+    shaderProgram.initialise();
+    shaderProgram.run();
 }

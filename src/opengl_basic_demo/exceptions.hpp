@@ -13,6 +13,10 @@ class ApplicationWindowException : public std::runtime_error {
     using std::runtime_error::runtime_error;
 };
 
+class ShaderProgramException : public std::runtime_error {
+    using std::runtime_error::runtime_error;
+};
+
 }  // opengl_basic_demo
 
 #endif

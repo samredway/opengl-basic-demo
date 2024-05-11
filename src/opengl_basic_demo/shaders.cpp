@@ -3,6 +3,7 @@
 
 namespace opengl_basic_demo {
 
+
 void VertexShader::initialise() {
     // creates a vertex buffer object which can be used to pass in the vertices
     // that will get drawn. The buffer is bound to target GL_ARRAY_BUFFER which
@@ -28,6 +29,36 @@ void VertexShader::initialise() {
         glGetShaderInfoLog(m_shaderId, logBufferSize, NULL, infoLog);
         std::string errMsg = std::string(infoLog);
         throw VertexShaderException(errMsg);
+    }
+}
+
+
+void ShaderProgram::initialise() {
+    // create shader program 
+    unsigned int shaderProgram;
+    shaderProgram = glCreateProgram();
+    
+    // attach shaders to underlying internal gl program
+    for (Shader* shader : m_orderedShaders) {
+        glAttachShader(m_shaderProgramId, shader->getId());
+    }
+    // link internal shaders
+    glLinkProgram(m_shaderProgramId);
+
+    // Now they are linked internally we no longer need the local shader objs
+    for (Shader* shader : m_orderedShaders) {
+        shader->deleteGlObj();
+    }
+
+    // check for success and get relevant error log
+    int success;
+    const size_t logBufferSize{512};
+    char infoLog[logBufferSize];
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    if(!success) {
+        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+        std::string errMsg = std::string(infoLog);
+        throw ShaderProgramException(errMsg);
     }
 }
 
