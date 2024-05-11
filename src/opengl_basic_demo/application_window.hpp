@@ -1,5 +1,8 @@
-#ifndef OPENGL_BASIC_DEMO_WINDOW_H
-#define OPENGL_BASIC_DEMO_WINDOW_H
+#ifndef OPENGL_BASIC_DEMO_WINDOW_HPP
+#define OPENGL_BASIC_DEMO_WINDOW_HPP
+
+#include "shaders.hpp"
+
 
 namespace opengl_basic_demo {
 
@@ -12,6 +15,9 @@ public:
     ApplicationWindow(unsigned int width, unsigned int height, const char* title)
         : m_width(width), m_height(height), m_title(title) {}
 
+    // initialise window object and shaders
+    void initialise();
+
     // Open the window and start its render loop
     void start();
   
@@ -20,7 +26,9 @@ private:
     unsigned int m_width;
     unsigned int m_height;
     const char* m_title;
-    GLFWwindow* m_window{};
+    GLFWwindow* m_window;
+    ShaderProgram* m_shaderProgram;
+    unsigned int m_vertexArrayId;
   
     // glfw: initialize and configure - helper method
     void initialiseGlfw();
@@ -29,6 +37,7 @@ private:
     // accordingly
     void processInput(GLFWwindow* window);
 };
+
 
 } // opengl_basic_demo
 

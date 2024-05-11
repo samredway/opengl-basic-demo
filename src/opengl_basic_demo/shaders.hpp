@@ -1,11 +1,12 @@
-#ifndef OPENGL_BASIC_DEMO_SHADER_H
-#define OPENGL_BASIC_DEMO_SHADER_H
+#ifndef OPENGL_BASIC_DEMO_SHADER_HPP
+#define OPENGL_BASIC_DEMO_SHADER_HPP
 
 #include <glad/glad.h>
 #include <string>
 #include <vector>
 
 #include "exceptions.hpp"
+
 
 namespace opengl_basic_demo {
 
@@ -14,6 +15,8 @@ class GlObjectWrapper {
 public:
     GlObjectWrapper() = default;
     ~GlObjectWrapper() {}
+
+    virtual unsigned int getId() { return m_glObjId; }
 
     // any initial setup and compilation of shader source code 
     virtual void initialise() = 0;
@@ -35,8 +38,6 @@ class Shader : public GlObjectWrapper {
 public:
     Shader() = default;
     virtual ~Shader() { deleteGlObj(); }
-
-    virtual unsigned int getId() { return m_glObjId; }
     virtual void deleteGlObj() { glDeleteShader(m_glObjId); }
 
 protected:
@@ -51,15 +52,7 @@ public:
     // set up vertex buffer and compile the shader source code
     virtual void initialise();
 
-    // write data to buffer and specify draw type. GL_STATIC_DRAW is used to 
-    // re-use the same vertex data many times without needing to resend or update
-    void writeToBuffer(float vertices[]) {
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    }
-
 private:
-    unsigned int m_vertexBufferObjectId;
-
     // define shaders in GLSL (graphics library shading language)
     // these get dynamically compiled at run time
     // vertex shader simpler declares location as 0 and defines
