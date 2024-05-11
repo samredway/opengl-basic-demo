@@ -90,7 +90,12 @@ class ShaderProgram {
 public:
     ShaderProgram(std::vector<Shader*> orderedShaders)
         : m_orderedShaders(orderedShaders) {}
-    ~ShaderProgram() {}
+
+    ~ShaderProgram() {
+        for (Shader* shader : m_orderedShaders) {
+            delete(shader);
+        }
+    }
 
     void initialise();
 
