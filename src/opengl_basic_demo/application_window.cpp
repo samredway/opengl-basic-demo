@@ -2,13 +2,22 @@
 #include <GLFW/glfw3.h>
 
 #include <string>
+#include <iostream>
 
-#include "application_window.hpp"
 #include "exceptions.hpp"
+#include "shaders.hpp"
+#include "application_window.hpp"
 
 #ifdef __APPLE__
     bool is_apple {true};
 #endif
+
+
+float vertices[] {
+    -0.5f, -0.5f, 0.0f,
+    0.5f, -0.5f, 0.0f,
+    0.0f,  0.5f, 0.0f
+};
 
 
 namespace opengl_basic_demo {
@@ -21,6 +30,32 @@ void ApplicationWindow::start() {
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         throw ApplicationWindowException(std::string("Unable to load glad function pointers"));
     }
+
+    // initialise vertex shader and write points
+    VertexShader* vertexShader = new VertexShader();
+    try {
+        vertexShader->initialise();
+    } catch (GlObjectException ex) {
+        std::cerr << "Error initialising vertex shader: " << ex.what() << std::endl;
+    }
+
+    // initialise fragment shader
+    FragmentShader* fragmentShader = new FragmentShader();
+    try {
+        fragmentShader->initialise();
+    } catch (GlObjectException ex) {
+        std::cerr << "Error initialising fragment shader: " << ex.what() << std::endl;
+    }
+
+    // Link shaders in a shader program and run
+    std::vector<opengl_basic_demo::Shader*> shaders{vertexShader, fragmentShader};
+    ShaderProgram shaderProgram{shaders};
+    try {
+        shaderProgram.initialise();
+    } catch (GlObjectException ex) {
+        std::cerr << "Error initialising shader program: " << ex.what() << std::endl;
+    }
+
 
     // do render loop
     while (!glfwWindowShouldClose(m_window)) {

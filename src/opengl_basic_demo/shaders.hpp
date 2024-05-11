@@ -10,21 +10,37 @@
 namespace opengl_basic_demo {
 
 
-class Shader {
+class GlObjectWrapper {
+public:
+    GlObjectWrapper() = default;
+    ~GlObjectWrapper() {}
+
+    // any initial setup and compilation of shader source code 
+    virtual void initialise() = 0;
+
+protected:
+    unsigned int m_glObjId;
+
+    // calls to glCreate<Object> functions return an obj id or 0 in case
+    // of failure
+    void checkObjectCreateSuccess() {
+        if (m_glObjId == 0) {
+            throw GlObjectException("underlying gl object not created");
+        }
+    }
+};
+
+
+class Shader : public GlObjectWrapper {
 public:
     Shader() = default;
     virtual ~Shader() { deleteGlObj(); }
 
-    // any initial setup and compile the shader source code
-    virtual void initialise() = 0;
-    virtual unsigned int getId() { return m_shaderId; }
+    virtual unsigned int getId() { return m_glObjId; }
+    virtual void deleteGlObj() { glDeleteShader(m_glObjId); }
 
-    // delete the underlying gl shader c object - once it is passed into the gpu
-    // we only need to keep the shader id
-    virtual void deleteGlObj() { glDeleteShader(m_shaderId); }
-
-private:
-    unsigned int m_shaderId;
+protected:
+    virtual void checkCompileErrors();
 };
 
 
@@ -42,7 +58,6 @@ public:
     }
 
 private:
-    unsigned int m_shaderId;
     unsigned int m_vertexBufferObjectId;
 
     // define shaders in GLSL (graphics library shading language)
@@ -64,16 +79,9 @@ class FragmentShader : public Shader {
 public:
     FragmentShader() = default;
 
-    virtual void initialise() {
-        // compile shader from source
-        m_shaderId = glCreateShader(GL_FRAGMENT_SHADER);
-        GLsizei numberOfShaders{1};
-        glShaderSource(m_shaderId, numberOfShaders, &m_shaderSource, NULL);
-        glCompileShader(m_shaderId);
-    }
+    virtual void initialise();
 
 private:
-    unsigned int m_shaderId;
     const char* m_shaderSource = "#version 330 core\n"
         "out vec4 FragColor;\n"
         "void main()\n"
@@ -85,7 +93,7 @@ private:
 
 // Takes a vector which contains an ordered collection of shaders to be run
 // The output of the first being passed to the input of the next and so on.
-class ShaderProgram {
+class ShaderProgram : public GlObjectWrapper{
 public:
     ShaderProgram(std::vector<Shader*> orderedShaders)
         : m_orderedShaders(orderedShaders) {}
@@ -96,14 +104,20 @@ public:
         }
     }
 
-    void initialise();
+    virtual void initialise();
 
     // Method to run program
-    void run() { glUseProgram(m_shaderProgramId); }
+    void run() { glUseProgram(m_glObjId); }
 
 private:
-    unsigned int m_shaderProgramId;
     std::vector<Shader*> m_orderedShaders;
+
+    void clearOrderedShaders() {
+        for (Shader* shader : m_orderedShaders) {
+            delete(shader);
+        }
+        m_orderedShaders.clear();
+    }
 };
 
 }  // opengl_basic_demo

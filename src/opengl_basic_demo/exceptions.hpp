@@ -5,15 +5,11 @@
 
 namespace opengl_basic_demo {
 
-class VertexShaderException : public std::runtime_error {
+class GlObjectException : public std::runtime_error {
     using std::runtime_error::runtime_error;
 };
 
 class ApplicationWindowException : public std::runtime_error {
-    using std::runtime_error::runtime_error;
-};
-
-class ShaderProgramException : public std::runtime_error {
     using std::runtime_error::runtime_error;
 };
 
