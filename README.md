@@ -11,11 +11,11 @@ By compiling our transformation functions (called shaders in the context of grap
 To see how the shaders are setup take a look in src/opengl_basic_demo/shaders.hpp and .cpp files.
 
 
-# Running it yourself
+## Running it yourself
 
 To run it yourself you will need to git clone this repo locally and create a folder called `lib/` at the root of the project. Into this folder you need to download the GLFW lib binary which you can get here https://www.glfw.org/download. I used the latest for mac64 which is `libglfw.3.4.dylib`. I think the code should be cross platform but have only tested it on mac.
 
-## building and running
+### building and running
 The .vscode/ has tasks.json setup so on vscode you should be able to just click `Terminal` and `Run Task` to build the executable binary into `bin/basicdemo.out`.
 
 If you do not have vscode you can copy the compiler flags I used and run them manually from the command line by checking in task.json at the `command` and `args` fields.
