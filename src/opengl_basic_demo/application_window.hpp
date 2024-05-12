@@ -28,7 +28,6 @@ private:
     const char* m_title;
     GLFWwindow* m_window;
     ShaderProgram* m_shaderProgram;
-    unsigned int m_vertexArrayId;
   
     // glfw: initialize and configure - helper method
     void initialiseGlfw();
