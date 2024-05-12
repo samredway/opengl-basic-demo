@@ -23,6 +23,7 @@ public:
 
 protected:
     unsigned int m_glObjId;
+    virtual void deleteGlObj() = 0;
 
     // calls to glCreate<Object> functions return an obj id or 0 in case
     // of failure
@@ -38,9 +39,11 @@ class Shader : public GlObjectWrapper {
 public:
     Shader() = default;
     virtual ~Shader() { deleteGlObj(); }
-    virtual void deleteGlObj() { glDeleteShader(m_glObjId); }
 
 protected:
+    virtual void deleteGlObj() { 
+        glDeleteShader(m_glObjId);
+    }
     virtual void checkCompileErrors();
 };
 
@@ -91,16 +94,16 @@ public:
     ShaderProgram(std::vector<Shader*> orderedShaders)
         : m_orderedShaders(orderedShaders) {}
 
-    ~ShaderProgram() {
-        for (Shader* shader : m_orderedShaders) {
-            delete(shader);
-        }
-    }
-
     virtual void initialise();
 
     // Method to run program
     void run() { glUseProgram(m_glObjId); }
+
+protected:
+    virtual void deleteGlObject() {
+        clearOrderedShaders();
+        glDeleteProgram(m_glObjId);
+    }
 
 private:
     std::vector<Shader*> m_orderedShaders;

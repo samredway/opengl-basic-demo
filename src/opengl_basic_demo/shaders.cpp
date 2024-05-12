@@ -11,6 +11,8 @@ void Shader::checkCompileErrors() {
     if (!success)
     {
         glGetShaderInfoLog(m_glObjId, 512, NULL, infoLog);
+        // free the memory allocated in glCreateShader
+        glDeleteShader(m_glObjId);
         throw GlObjectException(infoLog);
     }
 }
@@ -59,6 +61,9 @@ void ShaderProgram::initialise() {
     glGetProgramiv(m_glObjId, GL_LINK_STATUS, &success);
     if(!success) {
         glGetProgramInfoLog(m_glObjId, 512, NULL, infoLog);
+        // free memory allocated by glCreateProgram
+        clearOrderedShaders();
+        glDeleteProgram(m_glObjId);
         throw GlObjectException(infoLog);
     }
 
