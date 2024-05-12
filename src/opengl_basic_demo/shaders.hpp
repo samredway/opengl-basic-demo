@@ -53,7 +53,7 @@ public:
     VertexShader() = default;
 
     // set up vertex buffer and compile the shader source code
-    virtual void initialise();
+    void initialise() override;
 
 private:
     // define shaders in GLSL (graphics library shading language)
@@ -75,7 +75,7 @@ class FragmentShader : public Shader {
 public:
     FragmentShader() = default;
 
-    virtual void initialise();
+    void initialise() override;
 
 private:
     const char* m_shaderSource = "#version 330 core\n"
@@ -94,13 +94,13 @@ public:
     ShaderProgram(std::vector<Shader*> orderedShaders)
         : m_orderedShaders(orderedShaders) {}
 
-    virtual void initialise();
+    void initialise() override;
 
     // Method to run program
     void run() { glUseProgram(m_glObjId); }
 
 protected:
-    virtual void deleteGlObj() {
+    void deleteGlObj() override {
         clearOrderedShaders();
         glDeleteProgram(m_glObjId);
     }
