@@ -14,9 +14,9 @@ namespace opengl_basic_demo {
 class GlObjectWrapper {
 public:
     GlObjectWrapper() = default;
-    ~GlObjectWrapper() {}
+    virtual ~GlObjectWrapper() {}
 
-    virtual unsigned int getId() { return m_glObjId; }
+    unsigned int getId() { return m_glObjId; }
 
     // any initial setup and compilation of shader source code 
     virtual void initialise() = 0;
@@ -38,10 +38,10 @@ protected:
 class Shader : public GlObjectWrapper {
 public:
     Shader() = default;
-    virtual ~Shader() { deleteGlObj(); }
+    ~Shader() override { deleteGlObj(); }
 
 protected:
-    virtual void deleteGlObj() { 
+    void deleteGlObj() override{ 
         glDeleteShader(m_glObjId);
     }
     virtual void checkCompileErrors();
@@ -93,6 +93,8 @@ class ShaderProgram : public GlObjectWrapper{
 public:
     ShaderProgram(std::vector<Shader*> orderedShaders)
         : m_orderedShaders(orderedShaders) {}
+    
+    ~ShaderProgram() override { deleteGlObj(); }
 
     void initialise() override;
 
