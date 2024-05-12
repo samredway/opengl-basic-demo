@@ -100,7 +100,7 @@ public:
     void run() { glUseProgram(m_glObjId); }
 
 protected:
-    virtual void deleteGlObject() {
+    virtual void deleteGlObj() {
         clearOrderedShaders();
         glDeleteProgram(m_glObjId);
     }
